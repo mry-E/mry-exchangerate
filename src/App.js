@@ -6,7 +6,7 @@ function Header() {
         <header className="hero is-info">
             <div className="hero-body">
                 <div className="container">
-                    <h1 className="title is-1 ">ユーロ変換レート</h1>
+                    <h1 className="title is-1 ">米ドル変換レート</h1>
                 </div>
             </div>
         </header>
@@ -27,7 +27,6 @@ function Form(props) {
                         <div className="select">
                             <select name="currency" defaultValue="JPY">
                                 <option value="JPY">Japanese Yen (日本円）</option>
-                                <option value="USD">United States Dollar（米ドル）</option>
                                 <option value="CNY">Chanese Yuan（人民元）</option>
                                 <option value="GBP">Great Britain Pound（英ポンド）</option>
                                 <option value="NZD">New Zealand Dollar（ニュージーランドドル）</option>
@@ -50,17 +49,51 @@ function Form(props) {
     );
 }
 
-function Math(props){
+function Display(props){
     const { data } = props;
+    const [dollar,setPrice] = useState(null);
+    const handleChange1 = (e) => {
+        setPrice(e.target.value)
+    }
+
+    const [cent,setCent] = useState(null);
+    const handleChange2 = (e) => {
+        setCent(e.target.value)
+    }
+    
     if(data == null){
         return <p>Now Loading</p>
     }
-    return (
-        <div className="columns is-multiline">
-            <p> 1 ユーロ = {data} </p>
-        </div>
 
-    );
+    if(data*dollar+data*cent/100 < 1){
+        return (
+            <div className="columns is-multiline">
+            <div className="control">
+                <input id="num" value={dollar} onChange={handleChange1} className="input is-small" type="number" min="0" placeholder="0"/>
+            </div>
+            <p> ドル</p>
+            <div className="control">
+                <input id="num" value={cent} onChange={handleChange2} className="input is-small" type="number" min="0" max="99" placeholder="0"/>
+            </div>
+            <p>セント　=　 {Math.floor((data*dollar+data*cent/100)*10)/10}</p>
+        </div>
+        )
+    }
+    else{
+        return (
+            <div className="columns is-multiline">
+                <div className="control">
+                    <input id="num" value={dollar} onChange={handleChange1} className="input is-small" type="number" min="0" placeholder="0"/>
+                </div>
+                <p> ドル</p>
+                <div className="control">
+                    <input id="num" value={cent} onChange={handleChange2} className="input is-small" type="number" min="0" max="99" placeholder="0"/>
+                </div>
+                <p>セント　=　 {Math.floor(data*dollar+data*cent/100)}</p>
+            </div>
+    
+        );
+    }
 }
 
 function Main(){
@@ -83,7 +116,7 @@ function Main(){
         <main>
             <section className="section">
                 <div className="container is-max-desktop">
-                    <Math data={data} />
+                    <Display data={data} />
                     <Form onFormSubmit={reloadValue}/>
                 </div>
             </section>            
@@ -96,9 +129,10 @@ function Footer() {
     return (
         <footer className="footer">
             <div className="content has-text-centered">
-                <p>Data are retrieverd from exchangerates.io</p>
+                <p>この外貨変換は小数点以下切り捨てで表示しています。</p>
+                <p>Data are retrieverd from openexchangerates.org</p>
                 <p>
-                    <a href="https://exchangeratesapi.io/">Donate to exchangerates.io</a>
+                    <a href="https://openexchangerates.org">Donate to openexchangerates.org</a>
                 </p>
             </div>
         </footer>
