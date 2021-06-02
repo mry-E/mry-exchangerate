@@ -79,6 +79,7 @@ function Display(props){
         </div>
         )
     }
+    
     else{
         return (
             <div className="columns is-multiline">
